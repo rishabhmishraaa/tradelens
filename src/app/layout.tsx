@@ -25,9 +25,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <header className="flex items-center justify-between border-b border-black/10 px-6 py-4 dark:border-white/15">
-          <Link href="/" className="font-semibold tracking-tight">
-            TradeLens
-          </Link>
+          <nav aria-label="Main" className="flex items-center gap-6">
+            <Link href="/" className="font-semibold tracking-tight">
+              TradeLens
+            </Link>
+            <Link href="/trades" className="text-sm underline-offset-4 hover:underline">
+              Trades
+            </Link>
+          </nav>
           {/* Reads the session cookie, so it streams in behind a boundary (Cache Components). */}
           <Suspense fallback={<span className="text-sm opacity-60">…</span>}>
             <AuthStatus />

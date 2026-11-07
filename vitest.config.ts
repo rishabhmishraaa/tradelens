@@ -7,6 +7,9 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    // Run in UTC like Vercel and CI. On an IST laptop, a bug such as `new Date("2026-10-05T09:20")`
+    // would accidentally give the right answer and the tests would miss it.
+    env: { TZ: "UTC" },
     projects: [
       {
         extends: true,
