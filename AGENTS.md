@@ -78,7 +78,7 @@ Server-only modules start with `import "server-only"`. In Next 16 this needs no 
 ## Definition of done
 
 - The feature's `SPEC.md` criteria pass.
-- Tests and `npm run lint` pass.
+- Tests, `npm run lint` and `npm run build` pass (lint does not type-check; the build does).
 - The PR body maps each criterion to a test and says how it was verified.
 
 ## Git
