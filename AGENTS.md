@@ -33,7 +33,7 @@ This version differs from older Next.js: Turbopack is the default bundler, and `
 | `npm run build` | available |
 | `npm run start` | available |
 | `npm run lint` | available |
-| `npm run typecheck` (`tsc --noEmit`) | available |
+| `npm run typecheck` (`next typegen && tsc --noEmit`; Next's route types such as `LayoutProps` are generated into `.next/`, so plain `tsc` fails on a clean checkout) | available |
 | `npm test` (Vitest, `src/**/*.test.ts`) | available |
 | `npm run test:e2e` (Playwright, `e2e/`; builds and starts the app; `BASE_URL=...` tests a running site) | available |
 | `npm run db:*` (Drizzle) | planned |
