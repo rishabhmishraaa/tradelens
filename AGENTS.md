@@ -35,10 +35,11 @@ This version differs from older Next.js: Turbopack is the default bundler, and `
 | `npm run lint` | available |
 | `npm run typecheck` (`next typegen && tsc --noEmit`; Next's route types such as `LayoutProps` are generated into `.next/`, so plain `tsc` fails on a clean checkout) | available |
 | `npm test` (Vitest: `unit` project = `src/**/*.test.ts`; `int` project = `src/**/*.int.test.ts`, which wipes, migrates and seeds the Neon TEST branch first) | available |
-| `npm run test:e2e` (Playwright, `e2e/`; builds and starts the app; `BASE_URL=...` tests a running site) | available |
+| `npm run test:e2e` (`next build && playwright test`; the server gets test secrets, the build never does, same as CI/Vercel; `BASE_URL=...` tests a running site) | available |
 | `npm run db:generate` (SQL migration from `src/db/schema.ts` into `drizzle/`; commit it) | available |
 | `npm run db:migrate` / `npm run db:seed` (main branch; ask first) - add `-- --test` for the test branch | available |
 | `npm run db:reset:test` (wipe + migrate + seed the test branch only) | available |
+| `npm run hash-password -- "<password>"` (prints `OWNER_PASSWORD_HASH`) | available |
 
 ## File layout
 
@@ -55,6 +56,14 @@ Existing: `src/app/` (routes, layout, `globals.css`). Create the rest when first
 - Unit tests sit next to the code they test.
 
 Server-only modules start with `import "server-only"`. In Next 16 this needs no install: the package is optional (see `node_modules/next/dist/docs/01-app/01-getting-started/05-server-and-client-components.md`, "Preventing environment poisoning"). Do not add it as a dependency.
+
+## Auth (F3)
+
+- `src/server/auth/`: `password.ts` and `token.ts` are pure and unit-tested; `session.ts` (server-only) reads/writes the cookie; `actions.ts` holds the login/logout server actions.
+- Every server action or route that writes data calls `requireOwner()` first (D11).
+- Anything that calls `isOwner()` reads cookies, so render it inside `<Suspense>`; never await it at the top of a layout (Cache Components; see `node_modules/next/dist/docs/01-app/02-guides/authentication-with-cache-components.md`).
+- Request-dependent helpers call `await connection()` (or read cookies) BEFORE any early return that depends on env vars. Otherwise, when the env var is missing at build time, Next prerenders the early-return result for everyone (this happened in F3: "logged out" was baked into the static shell in CI).
+- E2E tests use the test-only credentials in `e2e/test-env.ts`, injected by `playwright.config.ts`.
 
 ## Conventions
 

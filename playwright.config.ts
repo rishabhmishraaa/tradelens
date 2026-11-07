@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { E2E_SERVER_ENV } from "./e2e/test-env";
 
 // BASE_URL set = test an already-running site (e.g. production, F10.3).
 // Otherwise build and start the app locally. In CI the build step runs first, so only start.
@@ -18,10 +19,13 @@ export default defineConfig({
   webServer: process.env.BASE_URL
     ? undefined
     : {
-        // F1.1: test the production build, not the dev server
-        command: isCI ? "npm run start" : "npm run build && npm run start",
+        // F1.1: test the production build, not the dev server. The build happens BEFORE Playwright
+        // (`npm run test:e2e` = next build && playwright test; CI has its own build step), so it never
+        // sees the E2E secrets below, exactly like CI and Vercel. Secrets only reach the running server.
+        command: "npm run start",
         url: baseURL,
         reuseExistingServer: false,
         timeout: 180_000,
+        env: E2E_SERVER_ENV, // merged over process.env; wins over .env.local
       },
 });

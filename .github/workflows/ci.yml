@@ -29,7 +29,7 @@ jobs:
           # F1.6: Neon test branch, from a repository secret. GitHub masks it in logs.
           TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      - run: npx playwright test # the build step above already ran
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
