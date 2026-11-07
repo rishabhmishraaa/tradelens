@@ -14,10 +14,10 @@ Installed (from `package.json` / `node_modules`):
 - Vitest 5 (unit/integration), Playwright 1.65 (E2E, Chromium)
 - GitHub Actions CI (`.github/workflows/ci.yml`: lint, typecheck, build, unit, E2E)
 - Postgres on Neon via Drizzle ORM 0.45 (`drizzle-orm/neon-http`, `@neondatabase/serverless` 1.2), drizzle-kit 0.31
+- Zod 4 (`src/lib/trade-schema.ts`)
 
 Planned (NOT installed; do not import until added in a feature PR):
 
-- Zod
 - `@anthropic-ai/sdk`
 - Vercel hosting
 
@@ -64,6 +64,14 @@ Server-only modules start with `import "server-only"`. In Next 16 this needs no 
 - Anything that calls `isOwner()` reads cookies, so render it inside `<Suspense>`; never await it at the top of a layout (Cache Components; see `node_modules/next/dist/docs/01-app/02-guides/authentication-with-cache-components.md`).
 - Request-dependent helpers call `await connection()` (or read cookies) BEFORE any early return that depends on env vars. Otherwise, when the env var is missing at build time, Next prerenders the early-return result for everyone (this happened in F3: "logged out" was baked into the static shell in CI).
 - E2E tests use the test-only credentials in `e2e/test-env.ts`, injected by `playwright.config.ts`.
+
+## Data access and pages (F4)
+
+- `src/server/db.ts` creates the client lazily from `DATABASE_URL` (never at build time). `src/server/trades.ts` holds queries; every query is scoped by user id. `viewer()` returns owner (read/write) or demo (read-only).
+- Server actions live in `src/server/*-actions.ts`: check the owner first, then validate with Zod, then write.
+- Pages read `params`, `searchParams` and the session inside a `<Suspense>` child component (runtime data under Cache Components).
+- Times: forms use IST via `src/lib/time.ts` (fixed +05:30). Never `new Date("YYYY-MM-DDTHH:MM")`: it uses the machine's zone. All tests run with `TZ=UTC` (like Vercel) so this bug can't hide on an IST laptop; `src/lib/tz-guard.test.ts` checks the setting.
+- E2E: `e2e/global-setup.ts` resets and seeds the TEST branch; the test server's `DATABASE_URL` is the TEST branch; tests run one at a time (`workers: 1`) because they share the database. Use `e2e/db.ts` to assert what was really saved.
 
 ## Conventions
 
