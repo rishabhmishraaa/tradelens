@@ -71,6 +71,10 @@ Server-only modules start with `import "server-only"`. In Next 16 this needs no 
 - Server actions live in `src/server/*-actions.ts`: check the owner first, then validate with Zod, then write.
 - Pages read `params`, `searchParams` and the session inside a `<Suspense>` child component (runtime data under Cache Components).
 - Times: forms use IST via `src/lib/time.ts` (fixed +05:30). Never `new Date("YYYY-MM-DDTHH:MM")`: it uses the machine's zone. All tests run with `TZ=UTC` (like Vercel) so this bug can't hide on an IST laptop; `src/lib/tz-guard.test.ts` checks the setting.
+- Status codes: once a page starts streaming, `notFound()` can no longer change the 200 status. Validate URL params that must 404 in `src/proxy.ts` (Next 16's name for middleware), before rendering; keep `notFound()` in the page as a backstop.
+- After a client-side navigation Next 16 keeps the previous page in the DOM, hidden. In Playwright, role queries skip hidden elements but `getByTestId` doesn't: use `.filter({ visible: true })`.
+- Shared UI lives in `src/components/` (trade table, stats summary, tag table, equity curve, date range form).
+- Dates shown to users go through `src/lib/format.ts` (built from en-US parts, so output doesn't change with locale/ICU rules).
 - E2E: `e2e/global-setup.ts` resets and seeds the TEST branch; the test server's `DATABASE_URL` is the TEST branch; tests run one at a time (`workers: 1`) because they share the database. Use `e2e/db.ts` to assert what was really saved.
 
 ## Conventions

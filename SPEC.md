@@ -104,11 +104,11 @@ Goal: all numbers come from small, tested functions in `src/lib/stats.ts`, with 
 
 ## F6. Dashboard and session pages
 
-- F6.1 `/` shows `summarize` for a date range (default: last 30 days) per currency, an inline-SVG equity curve of cumulative net P&L, the `byTag` table, and a list of sessions linking to `/sessions/[date]`. [E2E]
+- F6.1 `/` shows `summarize` for a date range (default: the 30 days ending at the most recent trade's session date, or today if there are no trades; changed from "last 30 days" so older data such as the fixed demo stays visible) per currency, an inline-SVG equity curve of cumulative net P&L, the `byTag` table, and a list of sessions linking to `/sessions/[date]`. [E2E]
 - F6.2 `/sessions/[date]` shows that day's trades, the day's stats, and the saved AI review if one exists. An invalid date returns 404; a valid date with no trades shows an empty state. [E2E]
 - F6.3 Numbers shown in the UI match the stats functions for the seed data (checked against the F5.7 fixture). [E2E]
 - F6.4 The equity curve has a text alternative stating start, end, peak and max drawdown. [E2E]
-- F6.5 Pages are server-rendered; no client JavaScript is needed to read stats. [E2E: page content present with JavaScript disabled]
+- F6.5 Pages are server-rendered: the stats are in the HTML the server sends, with no client-side data fetching. [E2E: the raw HTML response contains the stats] (Reworded: with Cache Components, request-time sections stream inside `<Suspense>` and a small inline script reveals them, so a browser with JavaScript fully disabled sees the loading text. Search crawlers get fully rendered HTML from Next.)
 - F6.6 Basic accessibility: one `<h1>` per page, labelled form fields, visible focus, and no axe-detectable violations of serious or critical impact on `/`, `/trades`, `/sessions/[date]`, `/login`. [E2E]
 
 Out of scope: chart libraries (D16), dark mode.
