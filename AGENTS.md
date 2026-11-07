@@ -13,10 +13,10 @@ Installed (from `package.json` / `node_modules`):
 - Node 26 (26.13.0), `@types/node` 26
 - Vitest 5 (unit/integration), Playwright 1.65 (E2E, Chromium)
 - GitHub Actions CI (`.github/workflows/ci.yml`: lint, typecheck, build, unit, E2E)
+- Postgres on Neon via Drizzle ORM 0.45 (`drizzle-orm/neon-http`, `@neondatabase/serverless` 1.2), drizzle-kit 0.31
 
 Planned (NOT installed; do not import until added in a feature PR):
 
-- Postgres on Neon via Drizzle ORM
 - Zod
 - `@anthropic-ai/sdk`
 - Vercel hosting
@@ -34,9 +34,11 @@ This version differs from older Next.js: Turbopack is the default bundler, and `
 | `npm run start` | available |
 | `npm run lint` | available |
 | `npm run typecheck` (`next typegen && tsc --noEmit`; Next's route types such as `LayoutProps` are generated into `.next/`, so plain `tsc` fails on a clean checkout) | available |
-| `npm test` (Vitest, `src/**/*.test.ts`) | available |
+| `npm test` (Vitest: `unit` project = `src/**/*.test.ts`; `int` project = `src/**/*.int.test.ts`, which wipes, migrates and seeds the Neon TEST branch first) | available |
 | `npm run test:e2e` (Playwright, `e2e/`; builds and starts the app; `BASE_URL=...` tests a running site) | available |
-| `npm run db:*` (Drizzle) | planned |
+| `npm run db:generate` (SQL migration from `src/db/schema.ts` into `drizzle/`; commit it) | available |
+| `npm run db:migrate` / `npm run db:seed` (main branch; ask first) - add `-- --test` for the test branch | available |
+| `npm run db:reset:test` (wipe + migrate + seed the test branch only) | available |
 
 ## File layout
 
@@ -44,7 +46,9 @@ Existing: `src/app/` (routes, layout, `globals.css`). Create the rest when first
 
 - `src/app/` - routes and UI. Server components by default.
 - `src/lib/` - pure functions (P&L, stats, formatting) with colocated `*.test.ts`.
-- `src/db/` - Drizzle schema and client (server-only).
+- `src/db/` - Drizzle schema, client, seed. Files here are also run directly by Node (`scripts/db.ts`), so they import each other with relative `.ts` paths, never `@/`.
+- `scripts/` - command-line scripts run by Node 26 directly (no `tsx`).
+- `drizzle/` - generated SQL migrations (committed; never edit by hand).
 - `src/server/` - other server-only code (actions, queries, auth).
 - `src/server/ai/` - all Claude calls, prompts, and their Zod output schemas.
 - `e2e/` - Playwright tests.
