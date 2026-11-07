@@ -77,7 +77,8 @@ Server-only modules start with `import "server-only"`. In Next 16 this needs no 
 
 - Server components by default; add `"use client"` only when state, effects, or browser APIs require it.
 - Validate all input with Zod at the server boundary (server actions, route handlers).
-- P&L and stats are pure functions in `src/lib` with unit tests.
+- P&L and stats are pure functions in `src/lib/stats.ts` with unit tests. `src/lib/__fixtures__/seed-stats.json` holds the expected stats for the seed data (F5.7); if you change the seed or a formula, regenerate it deliberately, re-check by hand, and explain the change in the PR. `src/db/stats.int.test.ts` cross-checks the JS against SQL.
+- A test for an ordering rule must use data where a different order gives a different answer.
 
 ## AI rules
 

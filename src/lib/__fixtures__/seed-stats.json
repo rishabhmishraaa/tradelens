@@ -1,0 +1,157 @@
+{
+  "summary": [
+    {
+      "currency": "INR",
+      "trades": 32,
+      "wins": 16,
+      "losses": 15,
+      "breakevens": 1,
+      "winRate": 0.516129,
+      "gross": -2821,
+      "fees": 1275.8,
+      "net": -4096.8,
+      "averageWin": 447.80625,
+      "averageLoss": -750.78,
+      "largestWin": 815,
+      "largestLoss": -2030,
+      "maxDrawdown": 6142.2
+    },
+    {
+      "currency": "USD",
+      "trades": 12,
+      "wins": 7,
+      "losses": 5,
+      "breakevens": 0,
+      "winRate": 0.583333,
+      "gross": 474,
+      "fees": 24,
+      "net": 450,
+      "averageWin": 138.428571,
+      "averageLoss": -103.8,
+      "largestWin": 323,
+      "largestLoss": -164.5,
+      "maxDrawdown": 210
+    }
+  ],
+  "byTag": [
+    {
+      "tag": "oversized",
+      "currency": "INR",
+      "count": 3,
+      "net": -5421,
+      "winRate": 0
+    },
+    {
+      "tag": "revenge-trade",
+      "currency": "INR",
+      "count": 3,
+      "net": -4161,
+      "winRate": 0
+    },
+    {
+      "tag": "chased-price",
+      "currency": "INR",
+      "count": 3,
+      "net": -3233,
+      "winRate": 0
+    },
+    {
+      "tag": "fomo-entry",
+      "currency": "INR",
+      "count": 3,
+      "net": -2387.5,
+      "winRate": 0
+    },
+    {
+      "tag": "broke-plan",
+      "currency": "INR",
+      "count": 1,
+      "net": -2030,
+      "winRate": 0
+    },
+    {
+      "tag": "held-loser",
+      "currency": "INR",
+      "count": 3,
+      "net": -757,
+      "winRate": 0
+    },
+    {
+      "tag": "overtraded",
+      "currency": "INR",
+      "count": 2,
+      "net": -650,
+      "winRate": 0
+    },
+    {
+      "tag": "moved-stop",
+      "currency": "INR",
+      "count": 2,
+      "net": -370,
+      "winRate": 0
+    },
+    {
+      "tag": "no-stop",
+      "currency": "INR",
+      "count": 1,
+      "net": -165.2,
+      "winRate": 0
+    },
+    {
+      "tag": "early-exit",
+      "currency": "INR",
+      "count": 2,
+      "net": 870,
+      "winRate": 1
+    },
+    {
+      "tag": null,
+      "currency": "INR",
+      "count": 15,
+      "net": 6294.9,
+      "winRate": 1
+    },
+    {
+      "tag": "no-stop",
+      "currency": "USD",
+      "count": 2,
+      "net": -316.5,
+      "winRate": 0
+    },
+    {
+      "tag": "held-loser",
+      "currency": "USD",
+      "count": 1,
+      "net": -164.5,
+      "winRate": 0
+    },
+    {
+      "tag": "moved-stop",
+      "currency": "USD",
+      "count": 1,
+      "net": -117,
+      "winRate": 0
+    },
+    {
+      "tag": "broke-plan",
+      "currency": "USD",
+      "count": 2,
+      "net": -85.5,
+      "winRate": 0
+    },
+    {
+      "tag": "overtraded",
+      "currency": "USD",
+      "count": 1,
+      "net": -40,
+      "winRate": 0
+    },
+    {
+      "tag": null,
+      "currency": "USD",
+      "count": 7,
+      "net": 969,
+      "winRate": 1
+    }
+  ]
+}
