@@ -10,15 +10,16 @@ Installed (from `package.json` / `node_modules`):
 - Tailwind CSS v4 (4.3.4) via `@tailwindcss/turbopack`
 - TypeScript 5 (5.9.3, `strict`, alias `@/*` -> `src/*`)
 - ESLint 9 (9.39.5, flat config in `eslint.config.mjs`, `eslint-config-next`)
-- Node 26 (26.13.0)
+- Node 26 (26.13.0), `@types/node` 26
+- Vitest 5 (unit/integration), Playwright 1.65 (E2E, Chromium)
+- GitHub Actions CI (`.github/workflows/ci.yml`: lint, typecheck, build, unit, E2E)
 
 Planned (NOT installed; do not import until added in a feature PR):
 
 - Postgres on Neon via Drizzle ORM
 - Zod
 - `@anthropic-ai/sdk`
-- Vitest, Playwright
-- GitHub Actions CI, Vercel hosting
+- Vercel hosting
 
 ## Next.js 16 warning
 
@@ -32,8 +33,9 @@ This version differs from older Next.js: Turbopack is the default bundler, and `
 | `npm run build` | available |
 | `npm run start` | available |
 | `npm run lint` | available |
-| `npm test` (Vitest) | planned |
-| `npm run test:e2e` (Playwright) | planned |
+| `npm run typecheck` (`next typegen && tsc --noEmit`; Next's route types such as `LayoutProps` are generated into `.next/`, so plain `tsc` fails on a clean checkout) | available |
+| `npm test` (Vitest, `src/**/*.test.ts`) | available |
+| `npm run test:e2e` (Playwright, `e2e/`; builds and starts the app; `BASE_URL=...` tests a running site) | available |
 | `npm run db:*` (Drizzle) | planned |
 
 ## File layout
