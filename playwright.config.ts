@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { E2E_SERVER_ENV } from "./e2e/test-env";
 
 // BASE_URL set = test an already-running site (e.g. production, F10.3).
 // Otherwise build and start the app locally. In CI the build step runs first, so only start.
@@ -23,5 +24,6 @@ export default defineConfig({
         url: baseURL,
         reuseExistingServer: false,
         timeout: 180_000,
+        env: E2E_SERVER_ENV, // merged over process.env; wins over .env.local
       },
 });

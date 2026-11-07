@@ -13,7 +13,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node scripts/db.ts migrate",
     "db:seed": "node scripts/db.ts seed",
-    "db:reset:test": "node scripts/db.ts reset --test"
+    "db:reset:test": "node scripts/db.ts reset --test",
+    "hash-password": "node scripts/hash-password.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
