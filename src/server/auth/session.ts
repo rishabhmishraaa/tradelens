@@ -14,11 +14,14 @@ export function sessionSecret(): string | null {
  * Reads cookies(), so callers must render inside <Suspense> (Cache Components rule).
  */
 export async function isOwner(): Promise<boolean> {
+  // Mark this as request-time FIRST, before any early return. Otherwise, when SESSION_SECRET is
+  // absent at build time (as in CI), the function returns without touching request data and
+  // Next prerenders "logged out" into the static shell for every visitor. It also makes
+  // Date.now() below safe (no prerender-time clock read).
+  await connection();
+  const token = (await cookies()).get(SESSION_COOKIE)?.value;
   const secret = sessionSecret();
   if (!secret) return false;
-  const token = (await cookies()).get(SESSION_COOKIE)?.value;
-  // Expiry depends on the current time, so this must run per request, never during prerendering.
-  await connection();
   return verifySessionToken(token, secret, Date.now());
 }
 

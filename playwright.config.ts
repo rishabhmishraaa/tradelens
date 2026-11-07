@@ -19,8 +19,10 @@ export default defineConfig({
   webServer: process.env.BASE_URL
     ? undefined
     : {
-        // F1.1: test the production build, not the dev server
-        command: isCI ? "npm run start" : "npm run build && npm run start",
+        // F1.1: test the production build, not the dev server. The build happens BEFORE Playwright
+        // (`npm run test:e2e` = next build && playwright test; CI has its own build step), so it never
+        // sees the E2E secrets below, exactly like CI and Vercel. Secrets only reach the running server.
+        command: "npm run start",
         url: baseURL,
         reuseExistingServer: false,
         timeout: 180_000,
