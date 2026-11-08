@@ -45,7 +45,7 @@ test("F6.2 a session page shows that day's trades and stats", async ({ page }) =
   await expect(visible(page, "trade-row")).toHaveCount(4);
   await expect(visible(page, "summary-INR")).toBeVisible();
   await expect(visible(page, "summary-INR").locator('[data-stat="Trades"]')).toHaveText("4 (1 W / 2 L / 1 BE)");
-  await expect(page.getByText("No AI review for this day yet.")).toBeVisible();
+  await expect(visible(page, "saved-review")).toBeVisible(); // every demo day has a seeded review (F8.3)
 });
 
 test("F6.2 an invalid date returns 404; a day with no trades shows an empty state", async ({ page }) => {
@@ -59,26 +59,14 @@ test("F6.2 an invalid date returns 404; a day with no trades shows an empty stat
 });
 
 test("F6.2 a saved AI review is shown on its session page", async ({ page }) => {
-  await db.insert(sessionReviews).values({
-    userId: "demo",
-    sessionDate: "2026-10-05",
-    // Must match the F7 review schema: saved reviews are re-validated before display.
-    review: {
-      summary: "Test review: two clean trades, one FOMO short.",
-      wentWell: [],
-      mistakes: [],
-      patterns: [],
-      nextSessionFocus: "Wait for confirmation.",
-    },
-    model: "test-model",
-  });
-  try {
-    await page.goto("/sessions/2026-10-05");
-    await expect(page.getByTestId("saved-review")).toContainText("Test review: two clean trades");
-    await expect(page.getByTestId("saved-review")).toContainText("test-model");
-  } finally {
-    await db.delete(sessionReviews).where(and(eq(sessionReviews.userId, "demo"), eq(sessionReviews.sessionDate, "2026-10-05")));
-  }
+  // The seed stores a review for every demo session (F8.3); read 5 Oct's straight from the database.
+  const [saved] = await db
+    .select()
+    .from(sessionReviews)
+    .where(and(eq(sessionReviews.userId, "demo"), eq(sessionReviews.sessionDate, "2026-10-05")));
+  await page.goto("/sessions/2026-10-05");
+  await expect(page.getByTestId("saved-review")).toContainText((saved.review as { summary: string }).summary);
+  await expect(page.getByTestId("review-mistakes")).toContainText("fomo-entry (HDFCBANK)");
 });
 
 test("F6.3 dashboard numbers match the stats functions for the seed data (F5.7 fixture)", async ({ page }) => {

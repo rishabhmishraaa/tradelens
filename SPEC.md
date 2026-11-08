@@ -27,6 +27,7 @@ If a criterion looks wrong or conflicts with another, stop and ask. Do not reint
 | D14 | **AI in tests**: `AI_MODE=mock` swaps the Claude client for a fake that returns fixtures. The app refuses to start with `AI_MODE=mock` when `VERCEL_ENV=production`. |
 | D15 | The model name comes from `ANTHROPIC_MODEL`; no model ID is hard-coded in source. If it is unset in `live` mode, the review button shows a configuration error (same handling as F7.5). |
 | D16 | No new runtime dependencies beyond AGENTS.md's planned list: no chart, date or auth libraries. Dates via `Intl`; the equity curve is a hand-written inline SVG. Allowed tooling that comes with the planned stack: `drizzle-kit`, the Neon serverless driver, and the dev dependency `@axe-core/playwright` (F6.6). Scripts are TypeScript run directly by Node 26 (no `tsx`). |
+| D17 | **No paid API budget** (decided 2026-11-08: no free API credit was available). The demo's reviews are pre-written samples, labelled as such, that must pass the same schema and grounding checks as live AI output (F8.3). Live generation and evals (F9) work as soon as an owner sets `ANTHROPIC_API_KEY`; until then the app shows a "not configured" message and never crashes. |
 
 ## Environment variables
 
@@ -149,8 +150,8 @@ Out of scope: streaming, chat, multi-day reviews (possible later feature).
 
 - F8.1 Without a session, every page shows the demo user's data and a banner: "Demo account: read-only. Data is sample data." [E2E]
 - F8.2 Demo visitors see no create/edit/delete/generate controls; F4.8 and F7.7 protect the server side. [E2E]
-- F8.3 Every demo session in the seed has a pre-generated, schema-valid review stored by the seed script (from committed fixture files), so visitors see reviews with no API calls. [Int] [E2E]
-- F8.4 Visiting the demo never calls the Claude API (asserted with the mock client counting calls). [E2E]
+- F8.3 Every demo session in the seed has a pre-generated, schema-valid review stored by the seed script (from committed fixture files), so visitors see reviews with no API calls. Each passes the F7.3 grounding checks against its day's trades and is labelled "sample review, pre-generated" (D17). [Unit] [Int] [E2E]
+- F8.4 Visiting the demo never calls the Claude API. [E2E: every request is recorded while browsing all demo pages; there are no POST/server-action requests, the only way a review can be generated] (Reworded from "the mock client counting calls": the mock runs inside the server process, while a browser-level check proves the same thing directly.)
 
 ## F9. Evals
 

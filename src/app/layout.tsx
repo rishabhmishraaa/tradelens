@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { Suspense } from "react";
 import { AuthStatus } from "./auth-status";
+import { DemoBanner } from "./demo-banner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -38,6 +39,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <AuthStatus />
           </Suspense>
         </header>
+        {/* Reads the session too, so it streams in; renders nothing for the owner. */}
+        <Suspense fallback={null}>
+          <DemoBanner />
+        </Suspense>
         <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">{children}</main>
       </body>
     </html>
