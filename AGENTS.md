@@ -15,10 +15,10 @@ Installed (from `package.json` / `node_modules`):
 - GitHub Actions CI (`.github/workflows/ci.yml`: lint, typecheck, build, unit, E2E)
 - Postgres on Neon via Drizzle ORM 0.45 (`drizzle-orm/neon-http`, `@neondatabase/serverless` 1.2), drizzle-kit 0.31
 - Zod 4 (`src/lib/trade-schema.ts`)
+- `@anthropic-ai/sdk` 1.6 (`src/server/ai/live-model.ts` only)
 
 Planned (NOT installed; do not import until added in a feature PR):
 
-- `@anthropic-ai/sdk`
 - Vercel hosting
 
 ## Next.js 16 warning
@@ -90,6 +90,11 @@ Server-only modules start with `import "server-only"`. In Next 16 this needs no 
 - The API key never reaches the client or git.
 - AI output is JSON validated with a Zod schema; invalid output is handled gracefully (no crash, user-visible fallback).
 - Tests NEVER call the real API; mock it.
+- Layout (F7): `review-schema.ts` (Zod schema + `groundingProblems`), `review-input.ts` (pure prompt input + system prompt; stats come from `src/lib/stats.ts`, the model never calculates), `generate.ts` (validate → grounding → one retry on invalid output, timeouts; no DB/Next imports), `mock-model.ts` (scenarios), `live-model.ts` (`server-only`, real SDK with structured outputs via `output_config.format`), `choose-model.ts` (env → model; mock refused in production), `actions.ts` (owner check, save only after validation).
+- `live-model.ts` is imported lazily, only in live mode. Vitest maps `server-only` to `src/test/server-only-stub.ts`.
+- E2E runs with `AI_MODE=mock`; tests choose a mock scenario with the `tl_ai_mock` cookie (ignored in live mode).
+- `npm run check:bundle` (after a build; part of `test:e2e` and CI) fails if the client bundle mentions the API key or the Anthropic API host.
+- A failed generate must keep the review already on screen: actions return the previous state on failure.
 
 ## Secrets
 

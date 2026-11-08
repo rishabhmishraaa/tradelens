@@ -28,12 +28,14 @@ export default defineConfig({
         // (`npm run test:e2e` = next build && playwright test; CI has its own build step), so it never
         // sees these secrets, exactly like CI and Vercel. Secrets only reach the running server.
         command: "npm run start",
-        url: baseURL,
+        // Readiness check on a page that doesn't query the database (global setup may be resetting it).
+        url: `${baseURL}/login`,
         reuseExistingServer: false,
         timeout: 180_000,
         // Merged over process.env; wins over .env.local. The app's DATABASE_URL points at the TEST branch.
         // TZ=UTC: the server runs in UTC like Vercel, so time-zone bugs can't hide on an IST laptop.
-        env: { ...E2E_SERVER_ENV, DATABASE_URL: databaseUrl("test"), TZ: "UTC" },
+        // AI_MODE=mock: the fake model answers; the real API is never called (F7.8).
+        env: { ...E2E_SERVER_ENV, DATABASE_URL: databaseUrl("test"), TZ: "UTC", AI_MODE: "mock" },
       }
     : undefined,
 });
