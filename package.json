@@ -9,14 +9,16 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "next build && playwright test",
+    "test:e2e": "next build && node scripts/check-bundle.ts && playwright test",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node scripts/db.ts migrate",
     "db:seed": "node scripts/db.ts seed",
     "db:reset:test": "node scripts/db.ts reset --test",
-    "hash-password": "node scripts/hash-password.ts"
+    "hash-password": "node scripts/hash-password.ts",
+    "check:bundle": "node scripts/check-bundle.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
     "@neondatabase/serverless": "^1.2.0",
     "drizzle-orm": "^0.45.4",
     "next": "16.4.5",

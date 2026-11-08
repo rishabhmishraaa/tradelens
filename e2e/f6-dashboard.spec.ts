@@ -62,7 +62,14 @@ test("F6.2 a saved AI review is shown on its session page", async ({ page }) => 
   await db.insert(sessionReviews).values({
     userId: "demo",
     sessionDate: "2026-10-05",
-    review: { summary: "Test review: two clean trades, one FOMO short." },
+    // Must match the F7 review schema: saved reviews are re-validated before display.
+    review: {
+      summary: "Test review: two clean trades, one FOMO short.",
+      wentWell: [],
+      mistakes: [],
+      patterns: [],
+      nextSessionFocus: "Wait for confirmation.",
+    },
     model: "test-model",
   });
   try {

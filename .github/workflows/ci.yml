@@ -24,6 +24,7 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
+      - run: npm run check:bundle # F7.9: no API key or server-only AI code in the browser bundle
       - run: npm test
         env:
           # F1.6: Neon test branch, from a repository secret. GitHub masks it in logs.
