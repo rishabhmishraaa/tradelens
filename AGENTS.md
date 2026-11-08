@@ -95,6 +95,7 @@ Server-only modules start with `import "server-only"`. In Next 16 this needs no 
 - E2E runs with `AI_MODE=mock`; tests choose a mock scenario with the `tl_ai_mock` cookie (ignored in live mode).
 - `npm run check:bundle` (after a build; part of `test:e2e` and CI) fails if the client bundle mentions the API key or the Anthropic API host.
 - A failed generate must keep the review already on screen: actions return the previous state on failure.
+- Demo reviews (F8.3, D17) live in `src/db/demo-reviews.ts` and are seeded with model `sample (pre-generated)`. If you change a demo trade, update its review: `demo-reviews.test.ts` runs the live schema + grounding checks on every one. Never present them as live AI output.
 
 ## Secrets
 

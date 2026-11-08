@@ -39,7 +39,7 @@ async function rejectionMessage(query: Promise<unknown>): Promise<string> {
 
 afterEach(async () => {
   await db.delete(trades).where(eq(trades.userId, "owner"));
-  await db.delete(sessionReviews);
+  await db.delete(sessionReviews).where(eq(sessionReviews.userId, "owner")); // demo reviews are seed data
 });
 
 describe("F2.2 database constraints", () => {
@@ -74,7 +74,7 @@ describe("F2.2 database constraints", () => {
 
 describe("F2.3 session reviews", () => {
   it("F2.3 allows only one review per user per session date", async () => {
-    const review = { userId: "demo", sessionDate: "2026-10-05", review: { summary: "x" }, model: "test-model" };
+    const review = { userId: "owner", sessionDate: "2026-10-05", review: { summary: "x" }, model: "test-model" };
     await db.insert(sessionReviews).values(review);
     const message = await rejectionMessage(db.insert(sessionReviews).values(review));
     expect(message).toContain("session_reviews_user_date_unique");
