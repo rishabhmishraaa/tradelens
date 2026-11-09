@@ -14,7 +14,7 @@ const visible = (page: Page, testId: string) => page.getByTestId(testId).filter(
 const inr = fixture.summary.find((s) => s.currency === "INR")!;
 const usd = fixture.summary.find((s) => s.currency === "USD")!;
 
-test("F6.1 dashboard defaults to the 30 days ending at the latest trade and shows every section", async ({ page }) => {
+test("F6.1 dashboard defaults to the 30 days ending at the latest trade and shows every section", { tag: "@prod" }, async ({ page }) => {
   await page.goto("/");
   // Latest demo trade exits 19 Oct 2026, so the default is 20 Sep – 19 Oct, not "the last 30 days from today".
   await expect(page.getByTestId("range-label")).toContainText("Sun, 20 Sep 2026 to Mon, 19 Oct 2026");
@@ -26,7 +26,7 @@ test("F6.1 dashboard defaults to the 30 days ending at the latest trade and show
   await expect(page.getByTestId("session-list").getByRole("link")).toHaveCount(11);
 });
 
-test("F6.1 a custom range is applied and kept in the URL", async ({ page }) => {
+test("F6.1 a custom range is applied and kept in the URL", { tag: "@prod" }, async ({ page }) => {
   await page.goto("/");
   await page.getByLabel("From (session date)").fill("2026-10-06");
   await page.getByLabel("To").fill("2026-10-06");
@@ -37,7 +37,7 @@ test("F6.1 a custom range is applied and kept in the URL", async ({ page }) => {
   await expect(visible(page, "summary-USD")).toHaveCount(0);
 });
 
-test("F6.2 a session page shows that day's trades and stats", async ({ page }) => {
+test("F6.2 a session page shows that day's trades and stats", { tag: "@prod" }, async ({ page }) => {
   await page.goto(ALL_SEED);
   await page.getByTestId("session-list").getByRole("link", { name: "Tue, 06 Oct 2026" }).click();
   await expect(page).toHaveURL("/sessions/2026-10-06");
@@ -48,7 +48,7 @@ test("F6.2 a session page shows that day's trades and stats", async ({ page }) =
   await expect(visible(page, "saved-review")).toBeVisible(); // every demo day has a seeded review (F8.3)
 });
 
-test("F6.2 an invalid date returns 404; a day with no trades shows an empty state", async ({ page }) => {
+test("F6.2 an invalid date returns 404; a day with no trades shows an empty state", { tag: "@prod" }, async ({ page }) => {
   for (const bad of ["2026-02-30", "not-a-date", "2026-10-6"]) {
     const response = await page.goto(`/sessions/${bad}`);
     expect(response?.status(), bad).toBe(404);
@@ -69,7 +69,7 @@ test("F6.2 a saved AI review is shown on its session page", async ({ page }) => 
   await expect(page.getByTestId("review-mistakes")).toContainText("fomo-entry (HDFCBANK)");
 });
 
-test("F6.3 dashboard numbers match the stats functions for the seed data (F5.7 fixture)", async ({ page }) => {
+test("F6.3 dashboard numbers match the stats functions for the seed data (F5.7 fixture)", { tag: "@prod" }, async ({ page }) => {
   await page.goto(ALL_SEED);
   const stat = (currency: string, label: string) => page.getByTestId(`summary-${currency}`).locator(`[data-stat="${label}"]`);
   await expect(stat("INR", "Net P&L")).toHaveText(formatSignedMoney(inr.net, "INR"));
@@ -85,7 +85,7 @@ test("F6.3 dashboard numbers match the stats functions for the seed data (F5.7 f
   await expect(stat("USD", "Net P&L")).toHaveText("+$450.00");
 });
 
-test("F6.4 each equity curve has a text alternative with start, end, peak and max drawdown", async ({ page }) => {
+test("F6.4 each equity curve has a text alternative with start, end, peak and max drawdown", { tag: "@prod" }, async ({ page }) => {
   await page.goto(ALL_SEED);
   const caption = page.getByTestId("equity-caption-USD");
   await expect(caption).toContainText("12 trades");
@@ -96,7 +96,7 @@ test("F6.4 each equity curve has a text alternative with start, end, peak and ma
   await expect(page.getByTestId("equity-caption-INR")).toContainText(`max drawdown ${formatMoney(inr.maxDrawdown, "INR")}`);
 });
 
-test("F6.5 stats are rendered on the server: the raw HTML response already contains them", async ({ request }) => {
+test("F6.5 stats are rendered on the server: the raw HTML response already contains them", { tag: "@prod" }, async ({ request }) => {
   // No browser and no client JavaScript: just the HTML the server sends.
   const html = await (await request.get(ALL_SEED)).text();
   expect(html).toContain("−₹4,096.80");
@@ -104,7 +104,7 @@ test("F6.5 stats are rendered on the server: the raw HTML response already conta
   expect(html).toContain("max drawdown $210.00");
 });
 
-test.describe("F6.6 accessibility", () => {
+test.describe("F6.6 accessibility", { tag: "@prod" }, () => {
   for (const path of ["/", "/trades", "/sessions/2026-10-06", "/login"]) {
     test(`F6.6 ${path}: one h1 and no serious or critical axe violations`, async ({ page }) => {
       await page.goto(path);
@@ -117,7 +117,7 @@ test.describe("F6.6 accessibility", () => {
     });
   }
 
-  test("F6.6 keyboard focus is visible", async ({ page }) => {
+  test("F6.6 keyboard focus is visible", { tag: "@prod" }, async ({ page }) => {
     await page.goto("/");
     await page.keyboard.press("Tab");
     const outline = await page.evaluate(() => {

@@ -165,7 +165,7 @@ Goal: evidence that the real model produces valid, grounded reviews. Run by hand
 
 ## F10. Deploy
 
-- F10.1 The app is deployed on Vercel from `main` with the env vars set in Vercel; `AI_MODE` is `live` in production. [Manual]
+- F10.1 The app is deployed on Vercel from `main` with the env vars set in Vercel; `AI_MODE` is unset (never `mock`) in production. Reworded: with no API budget (D17) there is no `ANTHROPIC_API_KEY` in production, so the owner's Generate shows the config error from F7.5, and the demo shows sample reviews. [Manual]
 - F10.2 Production uses the Neon main branch with migrations applied and the demo seeded. [Manual]
 - F10.3 The E2E suite has a read-only subset tagged `@prod` that passes against the live URL (`BASE_URL=... npm run test:e2e -- --grep @prod`). [E2E]
 - F10.4 README shows the live URL, a screenshot, how to run locally, the env vars, and the testing approach. [Manual]
