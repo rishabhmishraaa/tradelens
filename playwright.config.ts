@@ -10,7 +10,10 @@ const local = !process.env.BASE_URL;
 
 export default defineConfig({
   testDir: "e2e",
-  globalSetup: "./e2e/global-setup.ts", // resets + seeds the test branch
+  // Local runs reset + seed the test branch first. Against a live site there is nothing to reset:
+  // only tests tagged @prod run, and those are read-only, logged-out checks of the demo (F10.3).
+  globalSetup: local ? "./e2e/global-setup.ts" : undefined,
+  grep: local ? undefined : /@prod/,
   retries: 0, // F1.5: a flaky test should fail, not be hidden by a retry
   // Tests share one database, so run them one at a time to keep them independent and predictable.
   workers: 1,

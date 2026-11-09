@@ -14,7 +14,7 @@ async function logIn(page: Page) {
   await expect(page.getByRole("button", { name: "Log out" })).toBeVisible();
 }
 
-test("F8.1 visitors see the demo banner on every page", async ({ page }) => {
+test("F8.1 visitors see the demo banner on every page", { tag: "@prod" }, async ({ page }) => {
   for (const path of ["/", "/trades", "/sessions/2026-10-09", "/trades/new", "/login"]) {
     await page.goto(path);
     await expect(page.getByTestId("demo-banner"), path).toContainText(BANNER);
@@ -30,7 +30,7 @@ test("F8.1 the owner does not see the demo banner", async ({ page }) => {
   }
 });
 
-test("F8.2 visitors get no create, edit, delete or generate controls anywhere", async ({ page }) => {
+test("F8.2 visitors get no create, edit, delete or generate controls anywhere", { tag: "@prod" }, async ({ page }) => {
   for (const path of ["/", "/trades", "/sessions/2026-10-09"]) {
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -39,7 +39,7 @@ test("F8.2 visitors get no create, edit, delete or generate controls anywhere", 
   }
 });
 
-test("F8.3 every demo session shows its pre-generated review, labelled as a sample", async ({ page }) => {
+test("F8.3 every demo session shows its pre-generated review, labelled as a sample", { tag: "@prod" }, async ({ page }) => {
   expect(demoSessions).toHaveLength(11);
   for (const date of demoSessions) {
     await page.goto(`/sessions/${date}`);
@@ -48,7 +48,7 @@ test("F8.3 every demo session shows its pre-generated review, labelled as a samp
   }
 });
 
-test("F8.4 browsing the whole demo sends no server-action requests (so no AI call is possible)", async ({ page }) => {
+test("F8.4 browsing the whole demo sends no server-action requests (so no AI call is possible)", { tag: "@prod" }, async ({ page }) => {
   // Server actions are POST requests with a Next-Action header. A visitor browsing pages should make none.
   const posts: string[] = [];
   page.on("request", (req) => {
