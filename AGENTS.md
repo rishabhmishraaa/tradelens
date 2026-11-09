@@ -40,6 +40,7 @@ This version differs from older Next.js: Turbopack is the default bundler, and `
 | `npm run db:migrate` / `npm run db:seed` (main branch; ask first) - add `-- --test` for the test branch | available |
 | `npm run db:reset:test` (wipe + migrate + seed the test branch only) | available |
 | `npm run hash-password -- "<password>"` (prints `OWNER_PASSWORD_HASH`) | available |
+| `npm run eval` (real model, needs `ANTHROPIC_API_KEY` + `ANTHROPIC_MODEL`; appends to `EVALS.md`; never in CI) / `npm run eval:dry` (mock model, harness check only) | available |
 
 ## File layout
 
@@ -53,6 +54,7 @@ Existing: `src/app/` (routes, layout, `globals.css`). Create the rest when first
 - `src/server/` - other server-only code (actions, queries, auth).
 - `src/server/ai/` - all Claude calls, prompts, and their Zod output schemas.
 - `e2e/` - Playwright tests.
+- `evals/` - F9 eval fixtures, harness (`run.ts`) and its unit tests; `*.eval.ts` runs only via `vitest.eval.config.ts`.
 - Unit tests sit next to the code they test.
 
 Server-only modules start with `import "server-only"`. In Next 16 this needs no install: the package is optional (see `node_modules/next/dist/docs/01-app/01-getting-started/05-server-and-client-components.md`, "Preventing environment poisoning"). Do not add it as a dependency.

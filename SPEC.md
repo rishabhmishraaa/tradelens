@@ -157,10 +157,11 @@ Out of scope: streaming, chat, multi-day reviews (possible later feature).
 
 Goal: evidence that the real model produces valid, grounded reviews. Run by hand because it costs money.
 
-- F9.1 `npm run eval` runs the review pipeline with the real API on ≥ 5 fixed fixture days in `evals/fixtures/` (including: a day with no mistakes, an all-loss day, a revenge-trading day, a mixed-currency day, a day with long notes). [Eval]
+- F9.1 `npm run eval` runs the review pipeline with the real API on ≥ 5 fixed fixture days in `evals/fixtures.ts` (a TypeScript file rather than a folder, so fixtures can reuse the typed seed data; including: a day with no mistakes, an all-loss day, a revenge-trading day, a mixed-currency day, a day with long notes). [Eval]
 - F9.2 For each fixture it reports pass/fail for: schema valid, grounding checks (F7.3), retry used, and latency, and prints a summary table. Exit code is non-zero if any fixture fails. [Eval]
 - F9.3 Results of each run are appended to `EVALS.md` with the date, model and pass rate. [Manual]
 - F9.4 Evals are not part of CI. [Build]
+- F9.5 (added with D17) `npm run eval:dry` runs the same harness with the mock model, and `evals/run.test.ts` (in CI) proves the harness reports schema failures, grounding failures, retries and API errors. Until a live run exists, `EVALS.md` says plainly that the model has not been evaluated yet. [Unit] [Manual]
 
 ## F10. Deploy
 
