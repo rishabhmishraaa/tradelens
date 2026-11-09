@@ -15,7 +15,9 @@
     "db:seed": "node scripts/db.ts seed",
     "db:reset:test": "node scripts/db.ts reset --test",
     "hash-password": "node scripts/hash-password.ts",
-    "check:bundle": "node scripts/check-bundle.ts"
+    "check:bundle": "node scripts/check-bundle.ts",
+    "eval": "vitest run --config vitest.eval.config.ts",
+    "eval:dry": "vitest run --config vitest.eval.config.ts --mode dry"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",
